@@ -1,2 +1,2 @@
-# lcarbo_webchallenge.github.io
-My Web Design Challenge
+# web_scraping_challenge
+My Web Scraping Challenge
