@@ -6,6 +6,21 @@ from selenium import webdriver
 import datetime as dt
 
 
+def scrape_all():
+    executable_path = {'executable_path': ChromeDriverManager().install()}
+    browser = Browser('chrome', **executable_path, headless=True)
+    news_title, news_text = mars_soup(browser) 
+    data={
+        "news_title": news_title,
+        "news_text": news_text,
+        "featured_image": img(browser),
+        "facts": mars_facts(),
+        "hemispheres": hemis(browser),
+        "last_modified": dt.datetime.now(),
+    },
+    browser.quit()
+    return data
+
 
 #     #scrape news article,
 def mars_soup(browser):
@@ -59,20 +74,6 @@ def hemis(browser):
 
 
 
-def scrape_all():
-    executable_path = {'executable_path': ChromeDriverManager().install()}
-    browser = Browser('chrome', **executable_path, headless=True)
-    news_title, news_text = mars_soup(browser) 
-    data={
-        "news_title": news_title,
-        "news_text": news_text,
-        "featured_image": img(browser),
-        "facts": mars_facts(),
-        "hemispheres": hemis(browser),
-        "last_modified": dt.datetime.now(),
-    },
-    browser.quit()
-    return data
 
 if __name__ == "__main__":
     print (scrape_all())
