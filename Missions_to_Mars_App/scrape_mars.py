@@ -29,11 +29,15 @@ def mars_soup(browser):
     html = browser.html
     news_scrape = BeautifulSoup(html, 'html.parser')
     soupy_news = news_scrape.select_one('ul.item_list, li.slide')
+    try: 
     #gather news article details
-    news_title = soupy_news.find('h3').get_text()
-    link_tag = soupy_news.find('a')
-    news_link = link_tag['href']
-    news_text = soupy_news.find("div", class_='article_teaser_body').get_text()
+        news_title = soupy_news.find('h3').get_text()
+        link_tag = soupy_news.find('a')
+        # news_link = link_tag['href']
+        news_text = soupy_news.find("div", class_='article_teaser_body').get_text()
+    except AttributeError: 
+        return None, None
+
     return news_title, news_text
 
 # scrape image,
@@ -43,16 +47,22 @@ def img(browser):
     soupy_jpg = browser.links.find_by_partial_text('FULL IMAGE').click()
     html = browser.html
     img_scrape = BeautifulSoup(html, 'html.parser')
-    img_scrape_url= img_scrape.find("img", class_="fancybox-image").get('src')
+    try: 
+        img_scrape_url= img_scrape.find("img", class_="fancybox-image").get('src')
+    except AttributeError: 
+        return None 
     img_url= f'https://www.jpl.nasa.gov/{img_scrape_url}'
     return img_url
 
  #srcape table of mars facts ,
 def mars_facts():
-    marsdf = pd.read_html('https://space-facts.com/mars')[0]
+    try: 
+        marsdf = pd.read_html('https://space-facts.com/mars')[0]
+    except BaseException:
+        return None 
     marsdf.columns=['Planetary Detail','Mars']
     marsdf.set_index('Planetary Detail', inplace=True)
-    marsdf.to_html(classes='table table-striped')
+    return marsdf.to_html(classes='table table-striped')
 
 #hemisphere info ,
 def hemis(browser):
